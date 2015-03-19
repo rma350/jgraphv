@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="SHORTCUT ICON" HREF="favicon.png">
+
+    <!--                                                               -->
+    <!-- Consider inlining CSS to reduce the number of requested files -->
+    <!--                                                               -->
+    <link type="text/css" rel="stylesheet" href="JGraphVWebDemo.css">
+    
+    <title>JGraphV Demo</title>
+    
+    <script type="text/javascript" src="gl-matrix-2.2.2.min.js"></script>
+    <!--  Below was forked from here https://github.com/KhronosGroup/WebGL/blob/master/sdk/debug/webgl-debug.js -->
+    <script src="webgl-debug-3-1-2015.js"></script>
+    <script type="text/javascript" language="javascript" src="JGraphVWebDemo.js"></script>
+    
+    <!-- This script loads your compiled module.   -->
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <script type="text/javascript" language="javascript" src="jgraphvweb/jgraphvweb.nocache.js"></script>
+    <style>
+		html, body {
+			width: 100%;
+			height: 100%;
+			margin: 0px;
+			border: 0;
+			overflow: hidden; /*  Disable scrollbars */
+			display: block;  /* No floating content on sides */
+		}
+	</style>
+    
+  </head>
+  
+
+  <body>
+    
+    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+    <noscript>
+      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+    </noscript>
+
+    <!-- 
+    <h1>JGraphV Web Demo</h1> 
+     -->
+      
+    <canvas id="graph-canvas" width="0" height="0"></canvas>  
+    
+    
+  </body>
+</html>
