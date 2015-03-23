@@ -60,5 +60,12 @@ public abstract class JLinMath implements LinMath{
     od[0] = ad[0] - bd[0];
     od[1] = ad[1] - bd[1];
   }
+  
+  public void scale(Vec2 out, Vec2 a, float scale) {
+    float[] od = data(out);
+    float[] ad = data(a);
+    od[0] = scale*ad[0];
+    od[1] = scale*ad[1];
+  }
 
 }

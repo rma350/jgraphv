@@ -20,6 +20,9 @@ public interface LinMath {
   /** Computes a + b*scale and stores the result in out.  out can == a or b.*/
   public void scaleAndAdd(Vec2 out, Vec2 a, Vec2 b, float scale);
   
+  /** Computes a*scale and stores the result in out.  out can == a.*/
+  public void scale(Vec2 out, Vec2 a, float scale);
+  
   /** Computes sqrt(vec.x^2 + vec.y^2)*/
   public float norm(Vec2 vec);
   

@@ -1,8 +1,8 @@
 package com.github.rma350.jgraphv.web.client;
 
 import com.github.rma350.jgraphv.core.CheckedGL;
-import com.github.rma350.jgraphv.core.ShaderUtil;
 import com.github.rma350.jgraphv.core.portable.GL;
+import com.github.rma350.jgraphv.core.shapes.ShaderUtil;
 import com.github.rma350.jgraphv.web.client.coredeps.WebGL;
 import com.github.rma350.jgraphv.web.client.coredeps.WebMat4;
 import com.github.rma350.jgraphv.web.client.coredeps.WebMath;

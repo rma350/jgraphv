@@ -40,6 +40,12 @@ public class LwjVec2 implements Vec2{
     vec2.y = y;
   }
 
+  @Override
+  public void set(float x, float y) {
+    vec2.x = x;
+    vec2.y = y;
+  }
+
 
 
 }

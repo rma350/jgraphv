@@ -43,5 +43,15 @@ public class WebVec2 extends JavaScriptObject implements Vec2{
 		vec[1] = y;
   }-*/;
 
+  @Override
+  public void set(float x, float y) {
+    nSet(this, x, y);
+  }
+
+  private static native void nSet(WebVec2 vec, float x, float y)/*-{
+		vec[0] = x;
+		vec[1] = y;
+  }-*/;
+
   
 }

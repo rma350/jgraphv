@@ -3,6 +3,8 @@ package com.github.rma350.jgraphv.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.rma350.jgraphv.core.shapes.Drawable;
+
 public class Scene {
   
   private List<Drawable> drawables;

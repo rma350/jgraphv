@@ -7,5 +7,7 @@ public interface Vec2 {
   
   public void setX(float x);
   public void setY(float y);
+  
+  public void set(float x, float y);
 
 }

@@ -8,18 +8,51 @@ import java.util.Map;
 import com.github.rma350.jgraphv.core.portable.LinMath;
 import com.github.rma350.jgraphv.core.portable.Log;
 import com.github.rma350.jgraphv.core.portable.Vec2;
+import com.github.rma350.jgraphv.core.shapes.ArcBuffer;
+import com.github.rma350.jgraphv.core.shapes.ArcBufferBuilder;
+import com.github.rma350.jgraphv.core.shapes.ArcBuilder;
+import com.github.rma350.jgraphv.core.shapes.Arcs;
+import com.github.rma350.jgraphv.core.shapes.Circles;
+import com.github.rma350.jgraphv.core.shapes.CirclesBuffer;
+import com.github.rma350.jgraphv.core.shapes.DirectedArrowBuffer;
+import com.github.rma350.jgraphv.core.shapes.DirectedLines;
+import com.github.rma350.jgraphv.core.shapes.Lines;
+import com.github.rma350.jgraphv.core.shapes.LinesBuffer;
+import com.github.rma350.jgraphv.core.shapes.Points;
+import com.github.rma350.jgraphv.core.shapes.PointsBuffer;
 
 public class SceneDemos {
   
   private static final String TAG = SceneDemos.class.getSimpleName();
   
-  public static  void twoPoints(Engine engine) {
+  public static void twoPoints(Engine engine) {
     PointsBuffer points = new PointsBuffer(
         engine.getGL(), new float[] { 10, 20, 10, 400, 200, 15 });
     engine.getScene().addToScene(
         new Points(engine.getCamera(), engine.getPointsShader(),
             points, 0, 1, 0, 1));
   }
+  
+  
+  public static void arcForPoints(Engine engine) {
+    ArcBuilder arcBuilder = new ArcBuilder(engine.getGL().getLinMath());
+    arcBuilder.iFrom.set(10,20);
+    arcBuilder.iTo.set(100,20);
+    arcBuilder.iArcWidth = 3;
+    arcBuilder.computeArc();
+    ArcBufferBuilder bufferBuilder = new ArcBufferBuilder(1);
+    bufferBuilder.appendArc(arcBuilder);
+    ArcBuffer arcsBuffer = new ArcBuffer(engine.getGL(), bufferBuilder);
+    Arcs arcs = new Arcs(engine.getCamera(), engine.getArcShader(), arcsBuffer, 1, 0, 0, 1);
+    engine.getScene().addToScene(arcs);
+    
+    PointsBuffer points = new PointsBuffer(
+        engine.getGL(), new float[] { 10, 20, 10, 100, 20, 10 });
+    engine.getScene().addToScene(
+        new Points(engine.getCamera(), engine.getPointsShader(),
+            points, 0, 1, 0, 1));    
+  }
+  
 
   public static  void nodes(Engine engine) {
     int numCircles = 1000;
@@ -31,7 +64,7 @@ public class SceneDemos {
           (float) Math.random() * 2000, (float) Math.random() * 20);
     }
 
-    circles.checkedPutShapes(buffer, 0);
+    circles.checkedPutShapes(buffer);
 
     Circles circs = new Circles(engine.getCamera(),
         engine.getCirclesShader(), circles, 0, 0, 1, 1);
@@ -69,7 +102,7 @@ public class SceneDemos {
     CirclesBuffer.setCircle(circleBuffer, 0, 10, 20, 10);
     CirclesBuffer.setCircle(circleBuffer, 1, 200, 400, 15);
     CirclesBuffer.setCircle(circleBuffer, 2, 400, 200, 30);
-    circles.checkedPutShapes(circleBuffer, 0);
+    circles.checkedPutShapes(circleBuffer);
 
     Circles circs = new Circles(engine.getCamera(),
         engine.getCirclesShader(), circles, 0, 0, 1, 1);
@@ -93,41 +126,61 @@ public class SceneDemos {
     }
   }
   
-  private static class Graph {
+  public static class Graph {
     private List<Node> nodes;
-    private Map<Node,List<Node>> edges;
+    private Map<Node,List<Node>> singleEdges;
+    private Map<Node,List<Node>> doubleEdges;
     
     public Graph(){
       nodes = new ArrayList<Node>();
-      edges = new HashMap<Node,List<Node>>();
+      singleEdges = new HashMap<Node,List<Node>>();
+      doubleEdges = new HashMap<Node,List<Node>>();
     }
     
     public void addNode(Node node){
       nodes.add(node);
-      edges.put(node, new ArrayList<Node>());
+      singleEdges.put(node, new ArrayList<Node>());
+      doubleEdges.put(node, new ArrayList<Node>());
     }
     
     public void addEdge(Node src, Node dest){
-      edges.get(src).add(dest);
+      singleEdges.get(src).add(dest);
     }
     
-    public int edgeCount(){
+    public void addBidirectionalEdge(Node src, Node dest){
+      doubleEdges.get(src).add(dest);
+    }
+      
+    public int singleEdgeCount(){
       int ans = 0;
-      for(List<Node> target : edges.values()){
+      for(List<Node> target : singleEdges.values()){
         ans += target.size();
       }
       return ans;
     }
     
+    public int doubleEdgeCount(){
+      int ans = 0;
+      for(List<Node> target : doubleEdges.values()){
+        ans += target.size();
+      }
+      return 2*ans;
+    }
+    
     public List<Node> getNodes(){
       return nodes;
     }
-    public Map<Node,List<Node>> getEdges(){
-      return edges;
+    public Map<Node,List<Node>> getSingleEdges(){
+      return singleEdges;
+    }
+    
+    public Map<Node,List<Node>> getDoubleEdges(){
+      return doubleEdges;
     }
   }
   
-  private static Graph makeRandomGraph(int numNodes, int gridSize, double connectionDistance){
+  private static Graph makeRandomGraph(int numNodes, int gridSize,
+      double connectionDistance, boolean bidirectional) {
     Graph graph = new Graph();
     for(int i = 0; i < numNodes; i++){
       Node node = new Node();
@@ -138,11 +191,17 @@ public class SceneDemos {
     }
     for(int i = 0; i< numNodes; i++){
       Node ni = graph.getNodes().get(i);
+      
       for(int j = i+1; j < numNodes; j++){
         Node nj = graph.getNodes().get(j);
-        if(Node.distSquared(ni, nj) < connectionDistance*connectionDistance){
-          graph.addEdge(ni, nj);
-        }
+        if(Node.distSquared(ni, nj) < connectionDistance*connectionDistance){          
+          if(bidirectional){//Math.random() < .3){
+            graph.addBidirectionalEdge(ni,nj);
+          }
+          else{
+            graph.addEdge(ni, nj);
+          }
+        }        
       }
     }
     return graph;
@@ -150,13 +209,14 @@ public class SceneDemos {
   
   
   public static void makeGraph(Engine engine, boolean directed) {
-    Graph graph = makeRandomGraph(5000, 5000, 100); //(5,100,50);//
+    Graph graph = makeRandomGraph(5000, 5000, 100, !directed); //(5,100,50);//
     
     // Draw the edges
     
-    int edgeCount = graph.edgeCount();
+    
     
     if (directed) {
+      int edgeCount = graph.singleEdgeCount();
       LinMath math = engine.getGL().getLinMath();
       DirectedArrowBuffer arrowBuffer = new DirectedArrowBuffer(engine.getGL(),
           edgeCount);
@@ -167,11 +227,9 @@ public class SceneDemos {
       Vec2 srcVec = math.createVec2();
       Vec2 destVec = math.createVec2();
       for (Node src : graph.nodes) {
-        srcVec.setX(src.x);
-        srcVec.setY(src.y);
-        for (Node dest : graph.getEdges().get(src)) {
-          destVec.setX(dest.x);
-          destVec.setY(dest.y);
+        srcVec.set(src.x,src.y);
+        for (Node dest : graph.getSingleEdges().get(src)) {
+          destVec.set(dest.x, dest.y);
           arrowBuffer.setArrow(nextEdge, srcVec,
               destVec, arrowWidth, arrowHeadWidth,
               arrowHeadLength, (src.r*.9f) /* A hack to prevent white space.*/, dest.r);
@@ -189,11 +247,38 @@ public class SceneDemos {
           engine.getTriangleShader(), arrowBuffer.getTriangles(), 1, 0, 0, 1);
       engine.getScene().addToScene(directedLines);
     } else {
-      LinesBuffer lineData = new LinesBuffer(engine.getGL(), edgeCount);
-      float[] lineBuffer = LinesBuffer.makeBuffer(edgeCount);
+      ArcBuilder arcBuilder = new ArcBuilder(engine.getGL().getLinMath());
+      ArcBufferBuilder bufferBuilder = new ArcBufferBuilder(1);
+      arcBuilder.iArcWidth = 3;
+      arcBuilder.iArcRadians = (float)Math.PI/3;
+      
+      //int doubleEdgeCount = graph.doubleEdgeCount();
+      
+      for(Node src : graph.nodes){
+        for(Node dest : graph.getDoubleEdges().get(src)){
+          arcBuilder.iFrom.set(src.x, src.y);
+          arcBuilder.iTo.set(dest.x, dest.y);
+          
+          arcBuilder.computeArc();
+          bufferBuilder.appendArc(arcBuilder);
+          
+          arcBuilder.iFrom.set(dest.x, dest.y);
+          arcBuilder.iTo.set(src.x, src.y);
+          
+          arcBuilder.computeArc();
+          bufferBuilder.appendArc(arcBuilder);
+        }
+      }
+      ArcBuffer arcsBuffer = new ArcBuffer(engine.getGL(), bufferBuilder);
+      Arcs arcs = new Arcs(engine.getCamera(), engine.getArcShader(), arcsBuffer, 1, 0, 0, 1);
+      engine.getScene().addToScene(arcs);
+      
+      int singleEdgeCount = graph.singleEdgeCount();
+      LinesBuffer lineData = new LinesBuffer(engine.getGL(), singleEdgeCount);
+      float[] lineBuffer = LinesBuffer.makeBuffer(singleEdgeCount);
       int nextEdge = 0;
       for (Node src : graph.nodes) {
-        for (Node dest : graph.getEdges().get(src)) {
+        for (Node dest : graph.getSingleEdges().get(src)) {
           // Log.out.d(TAG,"Adding line: (" + src.x + ", " + src.y + ") (" +
           // dest.x + ", " + dest.y + ")");
           LinesBuffer.setLine(lineBuffer, nextEdge, src.x, src.y, dest.x,
@@ -201,13 +286,11 @@ public class SceneDemos {
           nextEdge++;
         }
       }
-      Log.out.i(TAG, "Graph has " + graph.nodes.size() + " nodes and "
-          + edgeCount + " edges.");
-      if (edgeCount != nextEdge) {
-        throw new RuntimeException("Expected : " + edgeCount
+      if (singleEdgeCount != nextEdge) {
+        throw new RuntimeException("Expected : " + singleEdgeCount
             + " edges but found: " + nextEdge);
       }
-      lineData.checkedPutShapes(lineBuffer, 0);
+      lineData.checkedPutShapes(lineBuffer);
       Lines lines = new Lines(engine.getCamera(), engine.getLinesShader(),
           lineData, 1, 0, 0, 1, 10);
       engine.getScene().addToScene(lines);
@@ -223,7 +306,7 @@ public class SceneDemos {
       CirclesBuffer.setCircle(circleBuffer, i, ni.x, ni.y, ni.r);
     }
 
-    circles.checkedPutShapes(circleBuffer, 0);
+    circles.checkedPutShapes(circleBuffer);
 
     Circles circs = new Circles(engine.getCamera(),
         engine.getCirclesShader(), circles, 0, 0, 1, 1);

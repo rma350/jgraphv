@@ -28,7 +28,8 @@ public class Main {
       engine = new Engine(new CheckedGL(new LwjGL()));
       engine.onResize(width, height);      
       GL11.glEnable(GL20.GL_VERTEX_PROGRAM_POINT_SIZE);
-      SceneDemos.makeGraph(engine,true);
+      SceneDemos.makeGraph(engine,false);
+      //SceneDemos.arcForPoints(engine);
       //SceneDemos.twoPoints(engine);
       //SceneDemos.connectPoints(engine);
     } catch (LWJGLException e) {

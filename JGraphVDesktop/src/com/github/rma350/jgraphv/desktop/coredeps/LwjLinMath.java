@@ -112,4 +112,12 @@ public class LwjLinMath implements LinMath{
     return nVec2(vec).length();
   }
 
+  @Override
+  public void scale(Vec2 out, Vec2 a, float scale) {
+    Vector2f nOut = nVec2(out);
+    Vector2f nA = nVec2(a);
+    nOut.x = scale*nA.x;
+    nOut.y = scale*nA.y;
+  }
+
 }

@@ -29,9 +29,8 @@ public class NioFloatBuffer implements NativeFloatBuffer{
   }
 
   @Override
-  public void putAll(float[] values, int offsetInFloats) {
-    this.setPositionInFloats(offsetInFloats);
-    buffer.put(values);
+  public void putAll(float[] src, int srcOffsetFloats, int numFloats) {
+    buffer.put(src, srcOffsetFloats, numFloats);
   }
 
   @Override

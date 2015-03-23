@@ -16,8 +16,10 @@ public class WebNativeFloatBuffer implements NativeFloatBuffer{
   }
 
   @Override
-  public void putAll(float[] values, int offset) {
-    nativeArray.set(values, offset);
+  public void putAll(float[] src, int srcOffset, int srcFloatCount) {
+    float[] srcExact = new float[srcFloatCount];
+    System.arraycopy(src, srcOffset, srcExact, 0, srcFloatCount);
+    nativeArray.set(srcExact);
   }
 
   @Override

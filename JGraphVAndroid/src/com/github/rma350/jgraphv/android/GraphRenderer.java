@@ -32,7 +32,7 @@ public class GraphRenderer implements GLSurfaceView.Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig arg1) {
 		mEngine = new Engine(new CheckedGL(new AndroidGL()));
-		SceneDemos.makeGraph(mEngine,true);
+		SceneDemos.makeGraph(mEngine,false);
 		//SceneDemos.connectPoints(mEngine);
 		// SceneDemos.twoPoints(mEngine);
 	}

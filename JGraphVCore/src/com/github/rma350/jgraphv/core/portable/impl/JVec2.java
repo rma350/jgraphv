@@ -40,5 +40,16 @@ public class JVec2 implements Vec2 {
   public void setY(float y) {
     mData[1] = y;
   }
+  
+  @Override
+  public String toString(){
+    return "(" + mData[0] + "," + mData[1] + ")";
+  }
+
+  @Override
+  public void set(float x, float y) {
+    mData[0] = x;
+    mData[1] = y;
+  }
 
 }

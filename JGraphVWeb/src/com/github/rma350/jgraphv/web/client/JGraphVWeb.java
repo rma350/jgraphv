@@ -25,7 +25,8 @@ public class JGraphVWeb implements EntryPoint {
     gl = webGL;
     engine = new Engine(gl);
     resize(webGL.getCanvasWidth(), webGL.getCanvasHeight());
-    SceneDemos.makeGraph(engine,true);
+    // SceneDemos.arcForPoints(engine);
+    SceneDemos.makeGraph(engine,false);
     // SceneDemos.connectPoints(engine);
     
     

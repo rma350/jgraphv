@@ -1,18 +1,28 @@
 package com.github.rma350.jgraphv.core;
 
 import com.github.rma350.jgraphv.core.portable.GL;
+import com.github.rma350.jgraphv.core.shapes.ArcShader;
+import com.github.rma350.jgraphv.core.shapes.CirclesShader;
+import com.github.rma350.jgraphv.core.shapes.LinesShader;
+import com.github.rma350.jgraphv.core.shapes.PointsShader;
+import com.github.rma350.jgraphv.core.shapes.TriangleShader;
 
 public class Engine {
 
   private GL gl;
   private Camera camera;
 
+  private ArcShader arcShader;
   private PointsShader pointsShader;
   private LinesShader linesShader;
   private CirclesShader circlesShader;
   private TriangleShader triangleShader;
 
   private Scene scene;
+  
+  public ArcShader getArcShader() {
+    return arcShader;
+  }
 
   public PointsShader getPointsShader() {
     return pointsShader;
@@ -45,10 +55,12 @@ public class Engine {
     gl.glBlendFunc(gl.kGL_SRC_ALPHA(), gl.kGL_ONE_MINUS_SRC_ALPHA());
     camera = new Camera(gl.getLinMath());
 
+    
     pointsShader = new PointsShader(gl);
     circlesShader = new CirclesShader(gl);
     linesShader = new LinesShader(gl);
     triangleShader = new TriangleShader(gl);
+    arcShader = new ArcShader(gl);
     scene = new Scene();
     
   }
