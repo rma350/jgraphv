@@ -1,6 +1,6 @@
 package com.github.rma350.jgraphv.core.shapes;
 
-import com.github.rma350.jgraphv.core.Camera;
+import com.github.rma350.jgraphv.core.engine.Camera;
 
 public class Arcs implements Drawable {
   

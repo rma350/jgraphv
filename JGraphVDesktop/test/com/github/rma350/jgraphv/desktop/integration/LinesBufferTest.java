@@ -12,10 +12,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
-import com.github.rma350.jgraphv.core.CheckedGL;
+import com.github.rma350.jgraphv.core.engine.CheckedGL;
 import com.github.rma350.jgraphv.core.nio.NioFloatBuffer;
 import com.github.rma350.jgraphv.core.portable.GL;
 import com.github.rma350.jgraphv.core.shapes.LinesBuffer;
+import com.github.rma350.jgraphv.core.shapes.NativeShapeBuffer.BufferUsage;
 import com.github.rma350.jgraphv.desktop.coredeps.LwjGL;
 
 public class LinesBufferTest {
@@ -57,7 +58,7 @@ public class LinesBufferTest {
   
   @Test
   public void testNativeBufferInit(){
-    LinesBuffer buffer = new LinesBuffer(gl, 3);
+    LinesBuffer buffer = new LinesBuffer(gl, 3, BufferUsage.STATIC);
     // 3 lines
     assertEquals(3, buffer.getShapeCount());
     // 3 lines each 2 verts
@@ -70,7 +71,7 @@ public class LinesBufferTest {
   
   @Test
   public void testNativeBuffer(){
-    LinesBuffer buffer = new LinesBuffer(gl, 2);
+    LinesBuffer buffer = new LinesBuffer(gl, 2, BufferUsage.STATIC);
     buffer.checkedPutShapes(createTwoLines());
     assertEquals(10, buffer.getVertexBuffer().get(0), tolerance);
     assertEquals(11, buffer.getVertexBuffer().get(1), tolerance);
@@ -86,13 +87,13 @@ public class LinesBufferTest {
   
   @Test
   public void testGpuTransfer(){
-    LinesBuffer buffer = new LinesBuffer(gl, 2);
+    LinesBuffer buffer = new LinesBuffer(gl, 2, BufferUsage.STATIC);
     buffer.checkedPutShapes(createTwoLines());
     buffer.bindBuffer();
     buffer.ensureOnGpu();    
     buffer.unBindBuffer();
     
-    LinesBuffer readBuffer = new LinesBuffer(gl, 2);
+    LinesBuffer readBuffer = new LinesBuffer(gl, 2, BufferUsage.STATIC);
     buffer.bindBuffer();
     GL15.glGetBufferSubData(gl.kGL_ARRAY_BUFFER(), 0, ((NioFloatBuffer)readBuffer.getVertexBuffer()).getBuffer());
     buffer.unBindBuffer();

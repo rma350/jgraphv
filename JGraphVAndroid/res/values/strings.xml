@@ -3,5 +3,6 @@
 
     <string name="app_name">JGraphV Demo</string>
     <string name="action_settings">Settings</string>
+    <string name="action_select_demo">Demo</string>
 
 </resources>

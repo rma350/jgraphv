@@ -53,6 +53,10 @@ public class WebGL implements GL{
     gl.bufferData(target, nativeArray, usage);
   }-*/;
   
+  private static native void glBufferSubData(JavaScriptObject gl, int target, int offset, Float32ArrayNative nativeArray) /*-{
+    gl.bufferSubData(target, offset, nativeArray);
+  }-*/;
+  
   private static native void glClear(JavaScriptObject gl, int mask) /*-{
     gl.clear(mask);
   }-*/;
@@ -242,6 +246,10 @@ public class WebGL implements GL{
     return gl.STATIC_DRAW;
   }-*/;
   
+  private static native int kGL_STREAM_DRAW(JavaScriptObject gl) /*-{
+    return gl.STREAM_DRAW;
+  }-*/;
+  
   private static native int kGL_TRIANGLES(JavaScriptObject gl) /*-{
     return gl.TRIANGLES;
   }-*/;
@@ -304,6 +312,12 @@ public class WebGL implements GL{
   @Override
   public void glBufferData(int target, NativeFloatBuffer nativeBuffer, int usage){
     glBufferData(gl,target,((WebNativeFloatBuffer)nativeBuffer).getNativeArray(),usage);
+  }
+  
+  // TODO(rma350): longs cannot go over the GWT barrier, find a performant way to deal with this safely.
+  @Override
+  public void glBufferSubData(int target, long offset, NativeFloatBuffer nativeBuffer){
+    glBufferSubData(gl, target, (int)offset, ((WebNativeFloatBuffer)nativeBuffer).getNativeArray());
   }
   
   @Override
@@ -491,6 +505,11 @@ public class WebGL implements GL{
   @Override
   public int kGL_STATIC_DRAW() {
     return kGL_STATIC_DRAW(gl);
+  }
+  
+  @Override
+  public int kGL_STREAM_DRAW() {
+    return kGL_STREAM_DRAW(gl);
   }
   
   @Override

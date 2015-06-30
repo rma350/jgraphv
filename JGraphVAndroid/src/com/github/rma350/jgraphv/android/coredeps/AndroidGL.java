@@ -172,6 +172,12 @@ public class AndroidGL implements GL {
   public void glBindBuffer(int target, int buffer) {
     GLES20.glBindBuffer(target, buffer);
   }
+  
+  @Override
+  public void glBufferSubData(int target, long offset, NativeFloatBuffer nativeArray) {
+    FloatBuffer floats = ((NioFloatBuffer)nativeArray).getBuffer();
+    GLES20.glBufferSubData(target, (int)offset, nativeArray.getSizeInBytes(), floats);
+  }
 
   @Override
   public void glBufferData(int target, NativeFloatBuffer nativeArray, int usage) {
@@ -259,6 +265,11 @@ public class AndroidGL implements GL {
   public int kGL_STATIC_DRAW() {
     return GLES20.GL_STATIC_DRAW;
   }
+  
+  @Override
+  public int kGL_STREAM_DRAW() {
+    return GLES20.GL_STREAM_DRAW;
+  }
 
   @Override
   public int kGL_VALIDATE_STATUS() {
@@ -269,5 +280,7 @@ public class AndroidGL implements GL {
   public AndroidLinMath getLinMath() {
     return mMath;
   }
+
+  
 
 }

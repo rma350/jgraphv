@@ -20,13 +20,18 @@ public abstract class JLinMath implements LinMath{
   }
 
   @Override
-  public Vec2 createVec2() {
+  public JVec2 createVec2() {
     return new JVec2();
   }
 
   @Override
-  public Vec2 createVec2(float x, float y) {
+  public JVec2 createVec2(float x, float y) {
     return new JVec2(x,y);
+  }
+  
+  @Override
+  public JVec2 createVec2(Vec2 other){
+    return new JVec2(data(other));
   }
 
   @Override
@@ -61,11 +66,39 @@ public abstract class JLinMath implements LinMath{
     od[1] = ad[1] - bd[1];
   }
   
+  @Override
   public void scale(Vec2 out, Vec2 a, float scale) {
     float[] od = data(out);
     float[] ad = data(a);
     od[0] = scale*ad[0];
     od[1] = scale*ad[1];
+  }
+  
+  @Override
+  public void lerp(Vec2 out, Vec2 a, Vec2 b, float t){
+    float[] od = data(out);
+    float[] ad = data(a);
+    float[] bd = data(b);
+    od[0] = (1-t)*ad[0] + t*bd[0];
+    od[1] = (1-t)*ad[1] + t*bd[1];
+  }
+  
+  @Override
+  public float dist(Vec2 a, Vec2 b){
+    float[] ad = data(a);
+    float[] bd = data(b);
+    float dx = bd[0] - ad[0];
+    float dy = bd[1] - ad[1];
+    return (float)Math.sqrt(dx*dx + dy*dy);
+  }
+  
+  @Override
+  public float distSquared(Vec2 a, Vec2 b){
+    float[] ad = data(a);
+    float[] bd = data(b);
+    float dx = bd[0] - ad[0];
+    float dy = bd[1] - ad[1];
+    return dx*dx + dy*dy;
   }
 
 }

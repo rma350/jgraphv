@@ -4,5 +4,6 @@
   <set-property name="gwt.logging.popupHandler" value="DISABLED" />
   <source path="core">
       <exclude name="core.nio.**/*.java"/>
+      <exclude name="core.threading.**/*.java"/>
   </source>
 </module> 

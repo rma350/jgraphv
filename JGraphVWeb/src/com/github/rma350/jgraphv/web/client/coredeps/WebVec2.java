@@ -52,6 +52,16 @@ public class WebVec2 extends JavaScriptObject implements Vec2{
 		vec[0] = x;
 		vec[1] = y;
   }-*/;
+  
+  @Override
+  public void copy(Vec2 other) {
+    nCopy(this, (WebVec2)other);
+  }
+
+  private static native void nCopy(WebVec2 vec, WebVec2 other)/*-{
+    vec[0] = other[0];
+    vec[1] = other[1];
+  }-*/;
 
   
 }

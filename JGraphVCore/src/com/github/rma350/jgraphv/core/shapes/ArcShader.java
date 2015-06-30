@@ -1,6 +1,6 @@
 package com.github.rma350.jgraphv.core.shapes;
 
-import com.github.rma350.jgraphv.core.Camera;
+import com.github.rma350.jgraphv.core.engine.Camera;
 import com.github.rma350.jgraphv.core.portable.GL;
 
 /**

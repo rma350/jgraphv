@@ -19,6 +19,10 @@ public class LwjVec2 implements Vec2{
   public LwjVec2(float x, float y){
     vec2 = new Vector2f(x,y);
   }
+  
+  public LwjVec2(Vector2f other){
+    vec2 = new Vector2f(other);
+  }
 
   @Override
   public float x() {
@@ -44,6 +48,16 @@ public class LwjVec2 implements Vec2{
   public void set(float x, float y) {
     vec2.x = x;
     vec2.y = y;
+  }
+  
+  @Override
+  public String toString() {
+    return "(" + vec2.x + "," + vec2.y + ")";
+  }
+  
+  @Override
+  public void copy(Vec2 other){
+    vec2.set(((LwjVec2)other).vec2);
   }
 
 

@@ -1,11 +1,14 @@
 package com.github.rma350.jgraphv.web.client;
 
-import com.github.rma350.jgraphv.core.Engine;
-import com.github.rma350.jgraphv.core.SceneDemos;
+import com.github.rma350.jgraphv.core.demo.AllDemos;
+import com.github.rma350.jgraphv.core.demo.Demo;
+import com.github.rma350.jgraphv.core.engine.Engine;
 import com.github.rma350.jgraphv.core.portable.GL;
 import com.github.rma350.jgraphv.core.portable.Log;
+import com.github.rma350.jgraphv.core.portable.impl.SynchronousTaskRunner;
 import com.github.rma350.jgraphv.web.client.coredeps.WebGL;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.JsArrayString;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -19,17 +22,29 @@ public class JGraphVWeb implements EntryPoint {
   private Engine engine;
   private int canvasWidth;
   private int canvasHeight;
+  
+  private int currentDemo = 0;
+  
+  public static JsArrayString getDemoNames() {
+    JsArrayString ans = JsArrayString.createArray().cast();
+    for(Demo demo: AllDemos.allDemos()){
+      ans.push(demo.getName());
+    }
+    return ans;
+  }
+  
+  public void setCurrentDemo(int demoIndex){
+    engine.reset();
+    currentDemo = demoIndex;
+    AllDemos.allDemos().get(currentDemo).run(engine);
+  }
  
   public void setupGL(){
     WebGL webGL = new WebGL("graph-canvas",true);
     gl = webGL;
-    engine = new Engine(gl);
+    engine = new Engine(gl, new SynchronousTaskRunner());
     resize(webGL.getCanvasWidth(), webGL.getCanvasHeight());
-    // SceneDemos.arcForPoints(engine);
-    SceneDemos.makeGraph(engine,false);
-    // SceneDemos.connectPoints(engine);
-    
-    
+    AllDemos.allDemos().get(currentDemo).run(engine);
   }
   
   public void resize(int widthPx, int heightPx) {
@@ -79,8 +94,8 @@ public class JGraphVWeb implements EntryPoint {
     engine.zoom(scaleFactor, screenX, canvasHeight - screenY);
   }
   
-  public void update(){
-    //engine.update();
+  public void update(double ellapsedTimeMs){
+    engine.update((long)ellapsedTimeMs);
   }
   
   public native void publish() /*-{
@@ -93,11 +108,10 @@ public class JGraphVWeb implements EntryPoint {
     });
     $wnd.jDrawScene = $entry(function() {
       that.@com.github.rma350.jgraphv.web.client.JGraphVWeb::drawScene()();
-    });    
-    $wnd.jUpdate = $entry(function() {
-      that.@com.github.rma350.jgraphv.web.client.JGraphVWeb::update()();
     });
-    
+    $wnd.jUpdate = $entry(function(x) {
+      that.@com.github.rma350.jgraphv.web.client.JGraphVWeb::update(D)(x);
+    });     
     $wnd.jOnClick = $entry(function(x,y) {
       that.@com.github.rma350.jgraphv.web.client.JGraphVWeb::onClick(II)(x,y);
     });
@@ -109,6 +123,10 @@ public class JGraphVWeb implements EntryPoint {
     });
     $wnd.jOnZoomAbout = $entry(function(x,y,s) {
       that.@com.github.rma350.jgraphv.web.client.JGraphVWeb::onZoomAbout(IIF)(x,y,s);
+    });
+    $wnd.jGetDemoNames = $entry(@com.github.rma350.jgraphv.web.client.JGraphVWeb::getDemoNames());
+    $wnd.jSetCurrentDemo = $entry(function(i) {
+      that.@com.github.rma350.jgraphv.web.client.JGraphVWeb::setCurrentDemo(I)(i);
     });
   }-*/;
   

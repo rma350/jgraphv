@@ -1,4 +1,4 @@
-package com.github.rma350.jgraphv.core;
+package com.github.rma350.jgraphv.core.engine;
 
 import com.github.rma350.jgraphv.core.portable.LinMath;
 import com.github.rma350.jgraphv.core.portable.Mat4;

@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.github.rma350.kidneyx.android.MainActivity" >
+    tools:context="com.github.rma350.jgraphv.android.MainActivity" >
 
     <item
         android:id="@+id/action_settings"

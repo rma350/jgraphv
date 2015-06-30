@@ -7,8 +7,8 @@ public class CirclesBuffer extends NativeShapeBuffer {
   private static int floatsPerVert = 4;
   private static int vertsPerCircle = 6;
 
-  public CirclesBuffer(GL gl, int numCircles) {
-    super(gl, floatsPerVert, vertsPerCircle, numCircles);
+  public CirclesBuffer(GL gl, int numCircles, BufferUsage bufferUsage) {
+    super(gl, floatsPerVert, vertsPerCircle, numCircles, bufferUsage);
   }
   
   public static float[] makeBuffer(int numCircles){

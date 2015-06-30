@@ -84,6 +84,11 @@ public class LwjLinMath implements LinMath{
   public LwjVec2 createVec2(float x, float y) {
     return new LwjVec2(x,y);
   }
+  
+  @Override
+  public LwjVec2 createVec2(Vec2 other) {
+    return new LwjVec2(nVec2(other));
+  }
 
   @Override
   public void add(Vec2 out, Vec2 a, Vec2 b) {
@@ -119,5 +124,27 @@ public class LwjLinMath implements LinMath{
     nOut.x = scale*nA.x;
     nOut.y = scale*nA.y;
   }
+
+  @Override
+  public void lerp(Vec2 out, Vec2 a, Vec2 b, float t) {
+    scale(out,a,1-t);
+    scaleAndAdd(out,out,b,t);
+  }
+
+  @Override
+  public float distSquared(Vec2 a, Vec2 b) {
+    Vector2f nA = nVec2(a);
+    Vector2f nB = nVec2(b);
+    float dx = nB.x - nA.x;
+    float dy = nB.y - nA.y;
+    return dx*dx + dy*dy;
+  }
+
+  @Override
+  public float dist(Vec2 a, Vec2 b) {
+    return (float)Math.sqrt(distSquared(a,b));
+  }
+
+  
 
 }

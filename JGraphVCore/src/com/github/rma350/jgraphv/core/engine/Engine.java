@@ -1,5 +1,6 @@
-package com.github.rma350.jgraphv.core;
+package com.github.rma350.jgraphv.core.engine;
 
+import com.github.rma350.jgraphv.core.portable.CooperativeTaskRunner;
 import com.github.rma350.jgraphv.core.portable.GL;
 import com.github.rma350.jgraphv.core.shapes.ArcShader;
 import com.github.rma350.jgraphv.core.shapes.CirclesShader;
@@ -10,6 +11,7 @@ import com.github.rma350.jgraphv.core.shapes.TriangleShader;
 public class Engine {
 
   private GL gl;
+  private CooperativeTaskRunner taskRunner;
   private Camera camera;
 
   private ArcShader arcShader;
@@ -47,9 +49,14 @@ public class Engine {
   public GL getGL() {
     return gl;
   }
+  
+  public CooperativeTaskRunner getTaskRunner(){
+    return taskRunner;
+  }
 
-  public Engine(GL gl) {
+  public Engine(GL gl, CooperativeTaskRunner taskRunner) {
     this.gl = gl;
+    this.taskRunner = taskRunner;
     gl.glClearColor(1, 1, 1, 1);
     gl.glEnable(gl.kGL_BLEND());
     gl.glBlendFunc(gl.kGL_SRC_ALPHA(), gl.kGL_ONE_MINUS_SRC_ALPHA());
@@ -63,6 +70,11 @@ public class Engine {
     arcShader = new ArcShader(gl);
     scene = new Scene();
     
+  }
+  
+  public void update(long ellapsedMs){
+    taskRunner.update();
+    scene.update(ellapsedMs);
   }
 
   public void drawFrame() {
@@ -87,6 +99,15 @@ public class Engine {
 
   public Camera getCamera() {
     return camera;
+  }
+  
+  public void onStop(){
+    taskRunner.onStop();
+  }
+  
+  public void reset(){
+    taskRunner.cancelAll();
+    scene.clear();
   }
 
 }

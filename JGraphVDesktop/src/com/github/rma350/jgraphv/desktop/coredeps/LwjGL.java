@@ -48,6 +48,11 @@ public class LwjGL implements GL{
   public void glBufferData(int target, NativeFloatBuffer nativeArray, int usage) {
     GL15.glBufferData(target, ((NioFloatBuffer)nativeArray).getBuffer(), usage);
   }
+  
+  @Override
+  public void glBufferSubData(int target, long offset, NativeFloatBuffer nativeArray){
+    GL15.glBufferSubData(target, offset, ((NioFloatBuffer)nativeArray).getBuffer());
+  }
 
   @Override
 	public void glClear(int mask) {
@@ -257,6 +262,11 @@ public class LwjGL implements GL{
   @Override
   public int kGL_STATIC_DRAW() {
     return GL15.GL_STATIC_DRAW;
+  }
+  
+  @Override
+  public int kGL_STREAM_DRAW() {
+    return GL15.GL_STREAM_DRAW;
   }
 
   @Override

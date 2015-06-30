@@ -7,8 +7,8 @@ public class LinesBuffer  extends NativeShapeBuffer{
   private static int floatsPerVert = 2;
   private static int vertsPerLine = 2;
 
-  public LinesBuffer(GL gl, int numLines) {
-    super(gl, floatsPerVert, vertsPerLine, numLines);    
+  public LinesBuffer(GL gl, int numLines, BufferUsage bufferUsage) {
+    super(gl, floatsPerVert, vertsPerLine, numLines, bufferUsage);    
   }
   
   public static float[] makeBuffer(int numLines){

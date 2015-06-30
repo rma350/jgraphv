@@ -10,8 +10,14 @@ public class JVec2 implements Vec2 {
     mData = new float[2];
   }
   
+  public JVec2(float[] other){
+    mData = new float[2];
+    mData[0] = other[0];
+    mData[1] = other[1];
+  }
+  
   public JVec2(float x, float y) {
-    mData = new float[4];
+    mData = new float[2];
     mData[0] = x;
     mData[1] = y;
   }
@@ -50,6 +56,13 @@ public class JVec2 implements Vec2 {
   public void set(float x, float y) {
     mData[0] = x;
     mData[1] = y;
+  }
+  
+  @Override
+  public void copy(Vec2 other){
+    JVec2 jOther = (JVec2)other;
+    mData[0] = jOther.mData[0];
+    mData[1] = jOther.mData[1];
   }
 
 }

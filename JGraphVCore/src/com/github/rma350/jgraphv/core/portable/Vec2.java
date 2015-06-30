@@ -9,5 +9,7 @@ public interface Vec2 {
   public void setY(float y);
   
   public void set(float x, float y);
+  
+  public void copy(Vec2 other);
 
 }

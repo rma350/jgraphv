@@ -175,13 +175,20 @@ window.cancelAnimFrame = (function() {
          window.clearTimeout;
 })();
 
+var lastFrameTime = 0;
+
 var tick = function() {
+	var currentFrameTime = new Date().getTime();
 	//console.log("tick");
     requestAnimFrame(tick);
     //console.log("draw");
     jDrawScene();
-    //console.log("update");
-    jUpdate();
+    if(lastFrameTime != 0){
+    	//console.log("update time: " + (currentFrameTime -lastFrameTime));
+        jUpdate(currentFrameTime - lastFrameTime);
+    }
+    lastFrameTime = currentFrameTime;
+    
     //console.log("done");
 }
 
@@ -198,6 +205,18 @@ function resizeCanvas() {
 }
 
 function onStart() {
+	var demoSelect = document.getElementById("demo-selector");
+	var demoNames = window.jGetDemoNames();
+	console.log(demoNames);
+	for(var i = 0; i < demoNames.length; i++){
+		var demoOption = document.createElement("option");
+		demoOption.innerHTML = demoNames[i];
+		demoOption.value = i;
+		demoSelect.appendChild(demoOption);
+	}
+	demoSelect.onchange = function() {
+		jSetCurrentDemo(demoSelect.selectedIndex);
+	}	
 	var gCanvas = document.getElementById("graph-canvas");
 	// https://www.khronos.org/webgl/wiki/HandlingHighDPI#Handling_High_DPI_.28Retina.29_displays_in_WebGL
 	gCanvas.width = window.innerWidth*devicePixelRatio;

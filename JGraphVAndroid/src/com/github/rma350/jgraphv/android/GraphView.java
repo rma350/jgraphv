@@ -1,6 +1,6 @@
 package com.github.rma350.jgraphv.android;
 
-import com.github.rma350.jgraphv.core.Camera;
+import com.github.rma350.jgraphv.core.engine.Camera;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -37,6 +37,10 @@ public class GraphView extends GLSurfaceView implements OnGestureListener, OnSca
     processed = mDetector.onTouchEvent(e) || processed;
     return processed || super.onTouchEvent(e);
   }
+  
+  public GraphRenderer getGraphRenderer(){
+    return mRenderer;
+  }
 
   @Override
   public boolean onDown(MotionEvent arg0) {
@@ -51,6 +55,15 @@ public class GraphView extends GLSurfaceView implements OnGestureListener, OnSca
 
   @Override
   public void onLongPress(MotionEvent arg0) {
+  }
+  
+  public void onDemoSelected(final int index){
+    this.queueEvent(new Runnable(){
+
+      @Override
+      public void run() {
+        getGraphRenderer().setDemo(index);
+      }});
   }
 
   @Override

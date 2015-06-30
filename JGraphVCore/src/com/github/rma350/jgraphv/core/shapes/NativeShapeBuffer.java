@@ -1,10 +1,17 @@
 package com.github.rma350.jgraphv.core.shapes;
 
 import com.github.rma350.jgraphv.core.portable.GL;
+import com.github.rma350.jgraphv.core.portable.Log;
 import com.github.rma350.jgraphv.core.portable.Mat4;
 import com.github.rma350.jgraphv.core.portable.NativeFloatBuffer;
 
 public class NativeShapeBuffer {
+  
+  private static final String TAG = NativeShapeBuffer.class.getSimpleName();
+  
+  public static enum BufferUsage {
+    STREAM, STATIC, DYNAMIC;
+  }
   
   private static final int BYTES_PER_FLOAT = 4;
 
@@ -22,11 +29,14 @@ public class NativeShapeBuffer {
   
   private boolean isOnGpu = false;
   
-  public NativeShapeBuffer(GL gl, int vertexSizeFloats, int vertsPerShape, int numShapes) {
+  private BufferUsage bufferUsage;
+  
+  public NativeShapeBuffer(GL gl, int vertexSizeFloats, int vertsPerShape, int numShapes, BufferUsage bufferUsage) {
     this.gl = gl;
     this.numShapes = numShapes;
     this.vertexSizeFloats = vertexSizeFloats;
     this.vertsPerShape = vertsPerShape;
+    this.bufferUsage = bufferUsage;
     vertexBuffer = gl.createFloatBuffer(vertexSizeFloats* vertsPerShape * numShapes);
     glBuffer = gl.glCreateBuffer();
     modelMatrix = gl.getLinMath().createMat4();
@@ -58,6 +68,11 @@ public class NativeShapeBuffer {
     vertexBuffer.setPositionInFloats(0);
   }
   
+  public void put(float[] vertexData, int vertexDataOffset, int vertexDataNumFloats){
+    vertexBuffer.putAll(vertexData, vertexDataOffset, vertexDataNumFloats);
+    vertexBuffer.setPositionInFloats(0);
+  }
+  
   protected void validateFloatAlignment(int numFloats) {
     if (numFloats % (vertexSizeFloats * vertsPerShape) != 0) {
       throw new RuntimeException("Expected num floats to be divisible by "
@@ -75,9 +90,9 @@ public class NativeShapeBuffer {
     put(vertexData);
   }
   
-  public void checkedPut(float[] vertexData, int srcOffset, int numFloats){
+  public void checkedPut(float[] vertexData, int vertexDataOffset, int numFloats){
     validateFloatAlignment(numFloats);
-    put(vertexData);
+    put(vertexData, vertexDataOffset, numFloats);
   }
     
   public Mat4 getModelMatrix() {
@@ -103,9 +118,39 @@ public class NativeShapeBuffer {
     }
   }
   
+  private int glUsageCode(BufferUsage usage){
+    switch(usage) {
+    case DYNAMIC:
+      return gl.kGL_DYNAMIC_DRAW();
+    case STATIC:
+      return gl.kGL_STATIC_DRAW();
+    case STREAM:
+      return gl.kGL_STREAM_DRAW();
+    default:
+      Log.out.e(TAG, "Unrecognized usage: " + usage.name());
+      return gl.kGL_DYNAMIC_DRAW();
+    }
+  }
+  
+  public void rebufferData(){
+    vertexBuffer.setPositionInFloats(0);
+    if(!this.isOnGpu){
+     gl.glBufferData(gl.kGL_ARRAY_BUFFER(), vertexBuffer, glUsageCode(bufferUsage)); 
+    }
+    else{
+     gl.glBufferSubData(gl.kGL_ARRAY_BUFFER(), 0, vertexBuffer);
+    }
+  }
+  
+  public void bindRebufferUnbind(){
+    bindBuffer();
+    rebufferData();
+    unBindBuffer();
+  }
+  
   public void bufferData(){
     vertexBuffer.setPositionInFloats(0);
-    gl.glBufferData(gl.kGL_ARRAY_BUFFER(), vertexBuffer, gl.kGL_STATIC_DRAW());
+    gl.glBufferData(gl.kGL_ARRAY_BUFFER(), vertexBuffer, glUsageCode(bufferUsage));
   }
   
   /** Visible for testing */

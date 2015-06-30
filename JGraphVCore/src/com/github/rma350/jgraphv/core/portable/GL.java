@@ -47,6 +47,7 @@ public interface GL {
 	
 	public int glCreateBuffer();
 	public void glBufferData(int target, NativeFloatBuffer nativeArray, int usage);
+	public void glBufferSubData(int target, long offset, NativeFloatBuffer nativeArray);
 	public void glBindBuffer(int target, int buffer);
 	
 	public int kGL_ARRAY_BUFFER();
@@ -69,6 +70,7 @@ public interface GL {
 	public int kGL_NO_ERROR();
 	public int kGL_POINTS();
 	public int kGL_STATIC_DRAW();
+	public int kGL_STREAM_DRAW();
 	public int kGL_TRIANGLES();
 	public int kGL_VALIDATE_STATUS();
 	public int kGL_VERTEX_SHADER();

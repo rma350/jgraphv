@@ -11,10 +11,11 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-import com.github.rma350.jgraphv.core.CheckedGL;
+import com.github.rma350.jgraphv.core.engine.CheckedGL;
 import com.github.rma350.jgraphv.core.portable.GL;
 import com.github.rma350.jgraphv.core.portable.LinMath;
 import com.github.rma350.jgraphv.core.shapes.DirectedArrowBuffer;
+import com.github.rma350.jgraphv.core.shapes.NativeShapeBuffer.BufferUsage;
 import com.github.rma350.jgraphv.desktop.coredeps.LwjGL;
 
 public class DirectedArrowBufferTest {
@@ -41,7 +42,7 @@ public class DirectedArrowBufferTest {
 
   @Test
   public void testSingleArrow() {
-    DirectedArrowBuffer arrowBuffer = new DirectedArrowBuffer(gl, 1);
+    DirectedArrowBuffer arrowBuffer = new DirectedArrowBuffer(gl, 1, BufferUsage.STATIC);
     float arrowWidth = 10;
     float arrowHeadWidth = 15;
     float arrowHeadLength = 30;

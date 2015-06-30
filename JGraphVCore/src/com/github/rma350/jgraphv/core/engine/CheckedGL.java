@@ -1,4 +1,4 @@
-package com.github.rma350.jgraphv.core;
+package com.github.rma350.jgraphv.core.engine;
 
 import com.github.rma350.jgraphv.core.portable.GL;
 import com.github.rma350.jgraphv.core.portable.LinMath;
@@ -181,6 +181,12 @@ public class CheckedGL implements GL {
     delegate.glBufferData(target, nativeArray, usage);
     debugAssertGLState();
   }
+  
+  @Override
+  public void glBufferSubData(int target, long offset, NativeFloatBuffer nativeArray) {
+    delegate.glBufferSubData(target, offset, nativeArray);
+    debugAssertGLState();
+  }
 
   @Override
   public void glBindBuffer(int target, int buffer) {
@@ -252,6 +258,11 @@ public class CheckedGL implements GL {
   @Override
   public int kGL_STATIC_DRAW() {
     return delegate.kGL_STATIC_DRAW();
+  }
+  
+  @Override
+  public int kGL_STREAM_DRAW() {
+    return delegate.kGL_STREAM_DRAW();
   }
 
   @Override

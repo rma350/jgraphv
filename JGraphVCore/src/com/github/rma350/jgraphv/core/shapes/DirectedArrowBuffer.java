@@ -3,6 +3,7 @@ package com.github.rma350.jgraphv.core.shapes;
 import com.github.rma350.jgraphv.core.portable.GL;
 import com.github.rma350.jgraphv.core.portable.LinMath;
 import com.github.rma350.jgraphv.core.portable.Vec2;
+import com.github.rma350.jgraphv.core.shapes.NativeShapeBuffer.BufferUsage;
 
 public class DirectedArrowBuffer {
   
@@ -15,11 +16,11 @@ public class DirectedArrowBuffer {
   
   private TriangleBuffer triangleBuffer;
   
-  public DirectedArrowBuffer(GL gl, int numArrows){
+  public DirectedArrowBuffer(GL gl, int numArrows, BufferUsage bufferUsage){
     this.linMath = gl.getLinMath();
     int numTriangles = numArrows*trianglesPerArrow; 
     buffer=TriangleBuffer.makeBuffer(numTriangles);
-    triangleBuffer = new TriangleBuffer(gl,numTriangles);
+    triangleBuffer = new TriangleBuffer(gl,numTriangles, bufferUsage);
     initSetArrowWithOffsetLocals();
     initSetArrowLocals();
   }

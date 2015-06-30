@@ -8,8 +8,8 @@ public class TriangleBuffer extends NativeShapeBuffer {
   private static int floatsPerVert = 2;
   private static int vertsPerTriangle = 3;
 
-  public TriangleBuffer(GL gl, int numTriangles) {
-    super(gl, floatsPerVert, vertsPerTriangle, numTriangles);    
+  public TriangleBuffer(GL gl, int numTriangles, BufferUsage bufferUsage) {
+    super(gl, floatsPerVert, vertsPerTriangle, numTriangles, bufferUsage);    
   }
   
   public static float[] makeBuffer(int numTriangles){

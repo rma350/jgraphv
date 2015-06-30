@@ -28,13 +28,13 @@ public class ArcBufferBuilder {
   public float[] getBuffer(){
     return buffer;
   }
-
-  public void appendArc(ArcBuilder arcBuilder) {
-    if (capacity() < sizeInFloats + ArcMemLayout.FLOATS_PER_ARC_TRIANGLE) {
+  
+  private void ensureCapacity(int numFloats){
+    if (capacity() < numFloats) {
       // Note that this is guarenteed to be enough space, as the minimum buffer
       // size is enough to fit one triangle, and we will double the buffer size.
       
-      float[] replacement = new float[capacity()*2];
+      float[] replacement = new float[Math.max(numFloats, capacity()*2)];
       for(int i = 0; i < this.sizeInFloats; i++){
         replacement[i] = buffer[i];
       }
@@ -44,8 +44,19 @@ public class ArcBufferBuilder {
       // TODO(rma350): when upgrading to GWT 2.7, replace with
       // buffer = Arrays.copyOf(buffer, capacity() * 2);
     }
+  }
+
+  public void appendArc(ArcBuilder arcBuilder) {
+    ensureCapacity(sizeInFloats + ArcMemLayout.FLOATS_PER_ARC_TRIANGLE);
     writeArcTriangle(buffer, sizeInFloats, arcBuilder);
     sizeInFloats += ArcMemLayout.FLOATS_PER_ARC_TRIANGLE;
+  }
+  
+  public void updateArc(ArcBuilder arcBuilder, int arcIndex){
+    int requiredCapacity = (arcIndex+1)*ArcMemLayout.FLOATS_PER_ARC_TRIANGLE;
+    ensureCapacity(sizeInFloats + ArcMemLayout.FLOATS_PER_ARC_TRIANGLE);
+    writeArcTriangle(buffer, arcIndex*ArcMemLayout.FLOATS_PER_ARC_TRIANGLE, arcBuilder);
+    sizeInFloats = Math.max(sizeInFloats, requiredCapacity);
   }
   
   private static void writeVec2(float[] buffer, int offset, Vec2 vec2){

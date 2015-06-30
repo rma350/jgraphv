@@ -8,6 +8,8 @@ public interface LinMath {
   /**Creates a vec2 (0,0)*/
   public Vec2 createVec2();
   public Vec2 createVec2(float x, float y);
+  /**Creates a new vec2 that is a copy of other.*/
+  public Vec2 createVec2(Vec2 other);
   
   /** Adds a+b, stores the result in out.  Out can == a or b.*/
   public void add(Vec2 out, Vec2 a, Vec2 b);
@@ -25,6 +27,15 @@ public interface LinMath {
   
   /** Computes sqrt(vec.x^2 + vec.y^2)*/
   public float norm(Vec2 vec);
+  
+  /** Computes norm(b-a)^2*/  
+  public float distSquared(Vec2 a, Vec2 b);
+  
+  /** Computes norm(b-a)*/
+  public float dist(Vec2 a, Vec2 b);
+  
+  /** Computes (1-t)*a + t*b and stores the result in out.  out can == a or b.*/
+  public void lerp(Vec2 out, Vec2 a, Vec2 b, float t);
   
   
   public void setIdentity(Mat4 mat);
