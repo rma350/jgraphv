@@ -3,10 +3,7 @@ A **J**ava library for **Graph** **V**isualization that runs on Android, Web, an
 
 ## Sample graphs
 
-Web/mobile web demos:
-
-* [A directed graph with 5000 nodes.](http://rma350.github.io/graph/JGraphVWebDemo.html)
-* [An undirected graph with 5000 nodes and curved edges.](http://rma350.github.io/undirectedgraph/JGraphVWebDemo.html)
+[Web/mobile web demos.](http://rma350.github.io/jgraphvdemo/JGraphVWebDemo.html)
 
 ## How it works
 
